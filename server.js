@@ -11,6 +11,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Разрешаем все источники (для разработки)
+app.use(cors());
+
 // Строка подключения к MongoDB
 const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/todoApp';
 
@@ -25,6 +28,13 @@ mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Мидлвар для парсинга JSON
 app.use(bodyParser.json());
+
+// Если нужно ограничить доступ только для определенного домена, можно сделать так:
+app.use(cors({
+  origin: 'http://localhost:3000', // Замените на ваш фронт
+}));
+
+// app.use(express.json());
 
 // Маршруты
 app.use('/auth', authRoutes);
