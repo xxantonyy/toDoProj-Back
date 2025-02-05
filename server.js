@@ -5,14 +5,12 @@ const mongoose = require('mongoose');
 const { authenticateToken } = require('./middleware/authMiddleware');
 const authRoutes = require('./routes/auth');
 const todoRoutes = require('./routes/todo');
+const cors = require('cors');
 
 // Инициализация приложения
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// Разрешаем все источники (для разработки)
-app.use(cors());
 
 // Строка подключения к MongoDB
 const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/todoApp';
