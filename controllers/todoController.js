@@ -1,29 +1,63 @@
 const { Todo } = require('../models/todo');
 
-// Получить все задачи пользователя
-exports.getTodos = (req, res) => {
-  const todos = Todo.getByUser(req.userId);
-  res.json(todos);
+// Получить все задачи для пользователя
+exports.getTodos = async (req, res) => {
+  try {
+    const todos = await Todo.find({ userId: req.userId });
+    res.json(todos);
+  } catch (err) {
+    res.status(500).json({ message: 'Ошибка при получении задач', error: err.message });
+  }
 };
 
-// Добавить задачу
-exports.addTodo = (req, res) => {
+// Создать новую задачу
+exports.addTodo = async (req, res) => {
   const { title, description } = req.body;
-  const newTodo = Todo.create(req.userId, title, description);
-  res.status(201).json(newTodo);
+  const newTodo = new Todo({
+    userId: req.userId,
+    title,
+    description
+  });
+
+  try {
+    await newTodo.save();
+    res.status(201).json(newTodo);
+  } catch (err) {
+    res.status(500).json({ message: 'Ошибка при создании задачи', error: err.message });
+  }
 };
 
 // Обновить задачу
-exports.updateTodo = (req, res) => {
+exports.updateTodo = async (req, res) => {
   const { todoId } = req.params;
   const { title, description, completed } = req.body;
-  const updatedTodo = Todo.update(todoId, title, description, completed);
-  res.json(updatedTodo);
+
+  try {
+    const todo = await Todo.findByIdAndUpdate(
+      todoId,
+      { title, description, completed },
+      { new: true }
+    );
+    if (!todo) {
+      return res.status(404).json({ message: 'Задача не найдена' });
+    }
+    res.json(todo);
+  } catch (err) {
+    res.status(500).json({ message: 'Ошибка при обновлении задачи', error: err.message });
+  }
 };
 
 // Удалить задачу
-exports.deleteTodo = (req, res) => {
+exports.deleteTodo = async (req, res) => {
   const { todoId } = req.params;
-  Todo.delete(todoId);
-  res.json({ message: 'Задача удалена' });
+
+  try {
+    const todo = await Todo.findByIdAndDelete(todoId);
+    if (!todo) {
+      return res.status(404).json({ message: 'Задача не найдена' });
+    }
+    res.json({ message: 'Задача удалена' });
+  } catch (err) {
+    res.status(500).json({ message: 'Ошибка при удалении задачи', error: err.message });
+  }
 };

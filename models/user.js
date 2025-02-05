@@ -1,18 +1,17 @@
-class User {
-  constructor(username, password) {
-    this.username = username;
-    this.password = password; // Хэшированный пароль
-  }
+const mongoose = require('mongoose');
 
-  static users = [];
+// Создаем схему для пользователей
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+});
 
-  static findByUsername(username) {
-    return User.users.find(user => user.username === username);
-  }
+// Добавляем метод для поиска пользователя по имени
+userSchema.statics.findByUsername = function (username) {
+  return this.findOne({ username });  // Поиск пользователя по имени
+};
 
-  save() {
-    User.users.push(this);
-  }
-}
+// Создаем модель User
+const User = mongoose.model('User', userSchema);
 
 module.exports = { User };

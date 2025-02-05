@@ -6,7 +6,6 @@ const { User } = require('../models/user');
 exports.register = async (req, res) => {
   const { username, password } = req.body;
 
-  // Проверка на наличие username и password
   if (!username || !password) {
     return res.status(400).json({ message: 'Необходимы оба поля: username и password' });
   }
@@ -17,8 +16,8 @@ exports.register = async (req, res) => {
   }
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10); // Хэширование пароля
-    const newUser = new User(username, hashedPassword);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({ username, password: hashedPassword });
     await newUser.save();
     res.status(201).json({ message: 'Пользователь зарегистрирован' });
   } catch (error) {
@@ -30,11 +29,18 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findByUsername(username);
-  
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+
+  if (!user) {
     return res.status(400).json({ message: 'Неверные данные авторизации' });
   }
-  
+
+  // Сравниваем пароль с хэшированным
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    return res.status(400).json({ message: 'Неверные данные авторизации' });
+  }
+
   const token = jwt.sign({ userId: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
   res.json({ token });
 };
