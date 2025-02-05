@@ -4,9 +4,7 @@ class User {
     this.password = password; // Хэшированный пароль
   }
 
-  static users = [
-    new User('test', 'test123'),
-  ];
+  static users = [];
 
   static findByUsername(username) {
     return User.users.find(user => user.username === username);
