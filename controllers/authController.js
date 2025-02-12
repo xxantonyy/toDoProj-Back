@@ -41,6 +41,6 @@ exports.login = async (req, res) => {
     return res.status(400).json({ message: 'Неверные данные авторизации' });
   }
 
-  const token = jwt.sign({ userId: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  const token = jwt.sign({ userId: user.username }, process.env.JWT_SECRET, { expiresIn: '30d' });
   res.json({ token, username });
 };
