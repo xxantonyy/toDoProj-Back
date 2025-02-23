@@ -5,6 +5,9 @@ const todoSchema = new mongoose.Schema({
   userId: { type: String, required: true },
   title: { type: String, required: true },
   description: String,
+  priority: { type: Number, default: 0 },
+  category: { type: Number, default: 0 },
+  date: Date,
   completed: { type: Boolean, default: false }
 });
 

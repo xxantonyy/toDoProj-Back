@@ -12,11 +12,15 @@ exports.getTodos = async (req, res) => {
 
 // Создать новую задачу
 exports.addTodo = async (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, priority, category, date, completed } = req.body;
   const newTodo = new Todo({
     userId: req.userId,
     title,
-    description
+    description,
+    priority,
+    category,
+    date,
+    completed
   });
 
   try {
@@ -30,12 +34,12 @@ exports.addTodo = async (req, res) => {
 // Обновить задачу
 exports.updateTodo = async (req, res) => {
   const { todoId } = req.params;
-  const { title, description, completed } = req.body;
+  const { title, description, completed, date, priority, category } = req.body;
 
   try {
     const todo = await Todo.findByIdAndUpdate(
       todoId,
-      { title, description, completed },
+      { title, description, completed, date, priority, category },
       { new: true }
     );
     if (!todo) {
