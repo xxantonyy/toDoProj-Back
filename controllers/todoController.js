@@ -25,7 +25,7 @@ exports.addTodo = async (req, res) => {
 
   try {
     await newTodo.save();
-    res.status(201).json(newTodo);
+    res.status(201).json({ message: 'Задача создана', success: true, data: newTodo });
   } catch (err) {
     res.status(500).json({ message: 'Ошибка при создании задачи', error: err.message });
   }
