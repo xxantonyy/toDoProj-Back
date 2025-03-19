@@ -6,19 +6,18 @@ exports.getTodos = async (req, res) => {
     const { sortBy, order, priority, category } = req.query;
     const filter = { userId: req.userId };
 
-    // Фильтрация по приоритету, если передан параметр
+    // Фильтрация по приоритету
     if (priority !== undefined) {
       filter.priority = Number(priority);
     }
 
-    // Фильтрация по категории, если передан параметр
+    // Фильтрация по категории
     if (category !== undefined) {
       filter.category = Number(category);
     }
 
-    // Определение параметров сортировки
-    const sortOptions = { date: 1, completed: 1 }; // Сортируем сначала по дате, потом по завершенности
-
+    // Определение порядка сортировки
+    const sortOptions = { date: 1, completed: 1 }; // По умолчанию сортировка по дате и статусу выполнения
     if (sortBy) {
       const validSortFields = ['priority', 'category'];
       if (validSortFields.includes(sortBy)) {
@@ -26,14 +25,13 @@ exports.getTodos = async (req, res) => {
       }
     }
 
-    // Получаем отфильтрованные и отсортированные задачи
+    // Запрос в базу данных
     const todos = await Todo.find(filter).sort(sortOptions);
     res.json(todos);
   } catch (err) {
     res.status(500).json({ message: 'Ошибка при получении задач', error: err.message });
   }
 };
-
 
 
 // Создать новую задачу
