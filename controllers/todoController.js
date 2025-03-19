@@ -16,16 +16,20 @@ exports.getTodos = async (req, res) => {
       filter.category = Number(category);
     }
 
-    // Определение порядка сортировки
-    const sortOptions = { date: 1, completed: 1 }; // По умолчанию сортировка по дате и статусу выполнения
+    // Сортировка (поправлен порядок применения сортировки)
+    let sortOptions = { date: 1, completed: 1 }; // Дефолтная сортировка по дате и статусу
+
     if (sortBy) {
-      const validSortFields = ['priority', 'category'];
+      const validSortFields = ['priority', 'category', 'date', 'completed'];
       if (validSortFields.includes(sortBy)) {
-        sortOptions[sortBy] = order === 'desc' ? -1 : 1;
+        sortOptions = { [sortBy]: order === 'desc' ? -1 : 1 }; // Динамическая сортировка
       }
     }
 
-    // Запрос в базу данных
+    console.log("Фильтр:", filter);
+    console.log("Сортировка:", sortOptions);
+
+    // Получение задач с фильтрацией и сортировкой
     const todos = await Todo.find(filter).sort(sortOptions);
     res.json(todos);
   } catch (err) {
