@@ -29,7 +29,8 @@ app.use(bodyParser.json());
 
 // Если нужно ограничить доступ только для определенного домена, можно сделать так:
 app.use(cors({
-  origin: 'http://localhost:3000', // Замените на ваш фронт
+  origin: ['http://localhost:3000', 'https://todo-forme.vercel.app'],
+  credentials: true,
 }));
 
 // app.use(express.json());
