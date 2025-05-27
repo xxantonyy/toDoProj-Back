@@ -7,14 +7,11 @@ exports.getUserStats = async (req, res) => {
     const user = await User.findOne({ username: req.userId }).select('-password');
     if (!user) return res.status(404).json({ message: 'Пользователь не найден' });
 
-    const totalTasks = await Todo.countDocuments({ userId: req.userId });
-    const completedTasks = await Todo.countDocuments({ userId: req.userId, completed: true });
-
     res.json({
       user,
       stats: {
-        totalTasks,
-        completedTasks
+        totalTasks: user.totalTasks || 0,
+        completedTasks: user.completedTasks || 0
       }
     });
   } catch (err) {
