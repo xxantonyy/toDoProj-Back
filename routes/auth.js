@@ -8,7 +8,4 @@ router.post('/register', register);
 // Логин
 router.post('/login', login);
 
-// Получить данные о пользователе и статистику задач
-router.get('/check', getUserStats);
-
 module.exports = router;
