@@ -1,4 +1,5 @@
 const { Todo } = require('../models/todo');
+const { User } = require('../models/user');
 
 // Получить все задачи для пользователя
 exports.getTodos = async (req, res) => {
