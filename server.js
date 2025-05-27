@@ -37,7 +37,7 @@ app.use(cors({
 
 // Маршруты
 app.use('/auth', authRoutes);
-app.use('/todos', authenticateToken, todoRoutes); // Добавляем маршрут с префиксом /todos
+app.use('/todos', authenticateToken, todoRoutes);
 
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);

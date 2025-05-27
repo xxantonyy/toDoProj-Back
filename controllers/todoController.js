@@ -41,6 +41,7 @@ exports.getTodos = async (req, res) => {
 // Создать новую задачу
 exports.addTodo = async (req, res) => {
   const { title, description, priority, category, date, completed } = req.body;
+
   const newTodo = new Todo({
     userId: req.userId,
     title,
@@ -53,6 +54,13 @@ exports.addTodo = async (req, res) => {
 
   try {
     await newTodo.save();
+
+    // Обновляем счетчики у пользователя
+    const updateFields = { $inc: { totalTasks: 1 } };
+    if (completed) updateFields.$inc.completedTasks = 1;
+
+    await User.updateOne({ username: req.userId }, updateFields);
+
     res.status(201).json({ message: 'Задача создана', success: true, data: newTodo });
   } catch (err) {
     res.status(500).json({ message: 'Ошибка при создании задачи', error: err.message });
@@ -65,15 +73,24 @@ exports.updateTodo = async (req, res) => {
   const { title, description, completed, date, priority, category } = req.body;
 
   try {
-    const todo = await Todo.findByIdAndUpdate(
+    const existingTodo = await Todo.findById(todoId);
+    if (!existingTodo) {
+      return res.status(404).json({ message: 'Задача не найдена' });
+    }
+
+    const updatedTodo = await Todo.findByIdAndUpdate(
       todoId,
       { title, description, completed, date, priority, category },
       { new: true }
     );
-    if (!todo) {
-      return res.status(404).json({ message: 'Задача не найдена' });
+
+    // Если статус completed изменился — обновляем счетчики
+    if (existingTodo.completed !== completed) {
+      const increment = completed ? 1 : -1;
+      await User.updateOne({ username: req.userId }, { $inc: { completedTasks: increment } });
     }
-    res.json(todo);
+
+    res.json(updatedTodo);
   } catch (err) {
     res.status(500).json({ message: 'Ошибка при обновлении задачи', error: err.message });
   }
