@@ -83,9 +83,8 @@ exports.updateTodo = async (req, res) => {
     );
 
     // Если статус completed изменился — обновляем счетчики
-    if (existingTodo.completed !== completed) {
-      const increment = completed ? 1 : -1;
-      await User.updateOne({ username: req.userId }, { $inc: { completedTasks: increment } });
+    if (existingTodo.completed === false && completed === true) {
+      await User.updateOne({ username: req.userId }, { $inc: { completedTasks: 1 } });
     }
 
     res.json(updatedTodo);
