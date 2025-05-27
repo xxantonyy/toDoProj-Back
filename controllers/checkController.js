@@ -1,4 +1,5 @@
 const { User } = require('../models/user');
+const { Todo } = require('../models/todo');
 
 // Получить статистику
 exports.getUserStats = async (req, res) => {
