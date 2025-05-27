@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const { authenticateToken } = require('./middleware/authMiddleware');
 const authRoutes = require('./routes/auth');
 const todoRoutes = require('./routes/todo');
+const checkRoutes = require('./routes/check');
 const cors = require('cors');
 
 // Инициализация приложения
@@ -38,6 +39,7 @@ app.use(cors({
 // Маршруты
 app.use('/auth', authRoutes);
 app.use('/todos', authenticateToken, todoRoutes);
+app.use('/check', authenticateToken, checkRoutes);
 
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);

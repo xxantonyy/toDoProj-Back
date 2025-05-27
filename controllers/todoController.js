@@ -26,9 +26,6 @@ exports.getTodos = async (req, res) => {
       }
     }
 
-    console.log("Фильтр:", filter);
-    console.log("Сортировка:", sortOptions);
-
     // Получение задач с фильтрацией и сортировкой
     const todos = await Todo.find(filter).sort(sortOptions);
     res.json(todos);
