@@ -14,7 +14,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Строка подключения к MongoDB
-const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/todoApp';
+// олдовая опция без докер контейнера
+// const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/todoApp';
+const mongoUri = process.env.MONGO_URI || 'mongodb://mongo:27017/mydb';
 
 // Подключение к базе данных MongoDB
 mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
