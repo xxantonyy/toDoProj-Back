@@ -11,7 +11,7 @@ const cors = require('cors');
 // Инициализация приложения
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Строка подключения к MongoDB
 // олдовая опция без докер контейнера
